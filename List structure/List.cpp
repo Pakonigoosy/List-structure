@@ -166,3 +166,16 @@ ListIterator<T>& ListIterator<T>::operator--() {
 	
 	return *this;
 }
+
+template<typename T>
+void List<T>::insert(List<T>::iterator it, T value) {
+	list_element<T>* elem = new list_element<T>;
+	list_element<T>* prev = &(*it);
+	list_element<T>* next = prev->next;
+	prev->next = elem;
+	elem->prev = prev;
+	elem->value = value;
+	elem->next = next;
+	next->prev = elem;
+
+}

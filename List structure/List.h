@@ -30,8 +30,8 @@ public:
 	void push_back(T elem);
 	T front();
 	T back();
-	void insert();
-	void copy();
+	void insert(List<T>::iterator, T value);
+	//void copy(iterator fst, iterator lst, std::ostream_iterator<T> action);
 	void unique();
 	void merge(List<T> to_merge);
 
