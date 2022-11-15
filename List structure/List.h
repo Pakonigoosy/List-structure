@@ -1,7 +1,8 @@
 #pragma once
 #include <initializer_list>
 #include <iterator>
-
+template<typename T>
+class ListIterator;
 
 template<typename T>
 struct list_element
@@ -14,9 +15,11 @@ struct list_element
 template<typename T>
 class List
 {
-public:
 	
-
+public:
+	typedef ListIterator<list_element<T>> iterator;
+	typedef ListIterator<const list_element<T>> const_iterator;
+	
 	List();
 	List(std::initializer_list<T> init);
 
@@ -32,26 +35,36 @@ public:
 	void unique();
 	void merge(List<T> to_merge);
 
-	//Нереализованные методы итераторов
-	/*iterator begin();
+	iterator begin();
 	iterator end();
 
 	const_iterator begin() const;
-	const_iterator end() const;*/
+	const_iterator end() const;
 	
 
 private:
 	list_element<T> *first;
-	const size_t size;
 
 };
 
 
-//Нереализованный итератор
-/*template<typename T>
+
+template<typename T>
 class ListIterator : public std::iterator<std::input_iterator_tag, T>
 {
-	friend class List;
+	friend class List<T>;
+private:
+	
+	T* p;
+public:
+	ListIterator(T* p);
+	ListIterator(const ListIterator& it);
+	
 
-};*/
+	bool operator!=(ListIterator const& other) const;
+	bool operator==(ListIterator const& other) const;
+	T& operator*() const;
+	ListIterator& operator++();
+	ListIterator& operator--();
+};
 

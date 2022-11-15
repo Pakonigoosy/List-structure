@@ -1,5 +1,21 @@
 #include "List.h"
 #include <iostream>
+template<typename T>
+bool operator!=(const list_element<T>& a, const list_element<T>& b) {
+	return a.value != b.value;
+}
+
+template<typename T>
+bool operator==(const list_element<T>& a, const list_element<T>& b) {
+	return a.value == b.value;
+}
+template<typename T>
+std::ostream& operator<<(std::ostream& out, const list_element<T>& a) {
+	out << a.value;
+	return out;
+}
+
+
 template <typename T>
 List<T>::List() {
 	list_element<T> first_le = new list_element<T>;
@@ -79,18 +95,74 @@ T List<T>::back() {
 	return last->value;
 }
 
-//Нереализованные методы итераторов
-/*
+
 template <typename T>
-List<T>::iterator List<T>::begin() {
-	return first;
+ListIterator<list_element<T>> List<T>::begin() {
+	
+	return iterator(first);
 }
 
 template <typename T>
-List<T>::iterator List<T>::end() {
+ListIterator<list_element<T>> List<T>::end() {
 	list_element<T>* last = first;
 	while (last->next != NULL) {
 		last = last->next;
 	}
-	return last;
-}*/
+	return iterator(last);
+}
+
+template <typename T>
+ListIterator<const list_element<T>> List<T>::begin() const {
+	return const_iterator(first);
+}
+
+template <typename T>
+ListIterator<const list_element<T>> List<T>::end() const{
+	list_element<T>* last = first;
+	while (last->next != NULL) {
+		last = last->next;
+	}
+	return const_iterator(last);
+}
+
+template<typename T>
+ListIterator<T>::ListIterator(T* p) : p(p) {
+}
+
+template<typename T>
+ListIterator<T>::ListIterator(const ListIterator& it) : p(it.p) {
+
+}
+
+template<typename T>
+bool ListIterator<T>::operator!=(ListIterator const& other) const {
+	return p != other.p;
+}
+
+template<typename T>
+bool ListIterator<T>::operator==(ListIterator const& other) const {
+	return p == other.p;
+}
+
+template<typename T>
+T& ListIterator<T>::operator*() const {
+	return *p;
+}
+
+template<typename T>
+ListIterator<T> &ListIterator<T>::operator++() {
+	if (p->next != NULL) {
+		p = p->next;
+	}
+	
+	return *this;
+}
+
+template<typename T>
+ListIterator<T>& ListIterator<T>::operator--() {
+	if (p->prev != NULL) {
+		p = p->prev;
+	}
+	
+	return *this;
+}
