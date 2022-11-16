@@ -145,18 +145,16 @@ T& ListIterator<T>::operator*() const {
 
 template<typename T>
 ListIterator<T> &ListIterator<T>::operator++() {
-	if (p->next->next != NULL) {
-		p = p->next;
-	}
+	p = p->next;
+
+	
 	
 	return *this;
 }
 
 template<typename T>
 ListIterator<T>& ListIterator<T>::operator--() {
-	if (p->prev != NULL) {
-		p = p->prev;
-	}
+	p = p->prev;
 	
 	return *this;
 }
@@ -164,12 +162,28 @@ ListIterator<T>& ListIterator<T>::operator--() {
 template<typename T>
 ListIterator<list_element<T>> List<T>::insert(List<T>::iterator it, T value) {
 	list_element<T>* elem = new list_element<T>;
-	list_element<T>* prev = &(*it);
-	list_element<T>* next = prev->next;
-	prev->next = elem;
+	list_element<T>* next = &(*it);
+	list_element<T>* prev = next->prev;
+	if (prev != nullptr) {
+		prev->next = elem;
+	}
+	else {
+		first = elem;
+	}
 	elem->prev = prev;
 	elem->value = value;
 	elem->next = next;
 	next->prev = elem;
 	return iterator(elem);
+}
+
+template<typename T>
+void List<T>::unique() {
+	for (list_element<T> elem : *this) {
+		iterator cur = iterator(&elem);
+		for (iterator it=cur; it != this->end(); ++it) {
+			
+		}
+		std::cout << std::endl;
+	}
 }
