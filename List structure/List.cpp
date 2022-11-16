@@ -16,10 +16,18 @@ std::ostream& operator<<(std::ostream& out, const list_element<T>& a) {
 }
 
 
+
 template <typename T>
 List<T>::List() {
 	list_element<T> first_le = new list_element<T>;
+	list_element<T> last_le = new list_element<T>;
 	first = &first_le;
+	first->next = last;
+	first->value = NULL;
+	first->prev = NULL;
+	last->next = NULL;
+	last->prev = first;
+	last->value = NULL;
 }
 
 template <typename T>
@@ -35,8 +43,9 @@ List<T>::List(std::initializer_list<T> init) {
 		current = current->next;
 		current->prev = prev;
 	}
-	current->prev->next = NULL;
-	
+	current->next = NULL;
+	current->value = NULL;
+	last = current;
 }
 
 template <typename T>
@@ -49,13 +58,11 @@ void List<T>::pop_front() {
 
 template <typename T>
 void List<T>::pop_back() {
-	list_element<T>* current = first;
-	while (current->next != NULL) {
-		current = current->next;
-	}
-	list_element<T>* prev = current->prev;
-	delete current;
-	prev->next = NULL;
+	list_element<T>* lst = last->prev;
+	list_element<T>* prev = lst->prev;
+	delete lst;
+	prev->next = last;
+	last->prev = prev;
 }
 
 template <typename T>
@@ -71,14 +78,12 @@ void List<T>::push_front(T elem) {
 template <typename T>
 void List<T>::push_back(T elem) {
 	list_element<T>* cur = new list_element<T>;
-	list_element<T>* last = first;
-	while (last->next != NULL) {
-		last = last->next;
-	}
-	last->next = cur;
-	cur->next = NULL;
-	cur->prev = last;
+	list_element<T>* lst = last->prev;
+	lst->next = cur;
+	cur->next = last;
+	cur->prev = lst;
 	cur->value = elem;
+	last->prev = cur;
 }
 
 template <typename T>
@@ -88,11 +93,8 @@ T List<T>::front() {
 
 template <typename T>
 T List<T>::back() {
-	list_element<T>* last = first;
-	while (last->next != NULL) {
-		last = last->next;
-	}
-	return last->value;
+	list_element<T>* lst = last->prev;
+	return lst->value;
 }
 
 
@@ -104,10 +106,6 @@ ListIterator<list_element<T>> List<T>::begin() {
 
 template <typename T>
 ListIterator<list_element<T>> List<T>::end() {
-	list_element<T>* last = first;
-	while (last->next != NULL) {
-		last = last->next;
-	}
 	return iterator(last);
 }
 
@@ -118,10 +116,6 @@ ListIterator<const list_element<T>> List<T>::begin() const {
 
 template <typename T>
 ListIterator<const list_element<T>> List<T>::end() const{
-	list_element<T>* last = first;
-	while (last->next != NULL) {
-		last = last->next;
-	}
 	return const_iterator(last);
 }
 
@@ -151,7 +145,7 @@ T& ListIterator<T>::operator*() const {
 
 template<typename T>
 ListIterator<T> &ListIterator<T>::operator++() {
-	if (p->next != NULL) {
+	if (p->next->next != NULL) {
 		p = p->next;
 	}
 	
@@ -168,7 +162,7 @@ ListIterator<T>& ListIterator<T>::operator--() {
 }
 
 template<typename T>
-void List<T>::insert(List<T>::iterator it, T value) {
+ListIterator<list_element<T>> List<T>::insert(List<T>::iterator it, T value) {
 	list_element<T>* elem = new list_element<T>;
 	list_element<T>* prev = &(*it);
 	list_element<T>* next = prev->next;
@@ -177,5 +171,5 @@ void List<T>::insert(List<T>::iterator it, T value) {
 	elem->value = value;
 	elem->next = next;
 	next->prev = elem;
-
+	return iterator(elem);
 }
