@@ -181,9 +181,52 @@ template<typename T>
 void List<T>::unique() {
 	for (list_element<T> elem : *this) {
 		iterator cur = iterator(&elem);
-		for (iterator it=cur; it != this->end(); ++it) {
+		iterator it = cur;
+		++it;
+		for (it; it != this->end(); ++it) {
+			if ((*it).value == (*cur).value) {
+				list_element<T>* el = &(*it);
+				--it;
+				list_element<T>* prev = &(*it);
+				++it;
+				++it;
+				list_element<T>* next = &(*it);
+				prev->next = next;
+				next->prev = prev;
+				delete el;
+				--it;
+			}
 			
 		}
-		std::cout << std::endl;
 	}
 }
+
+template<typename T>
+void List<T>::merge(List to_merge) {
+	for (list_element<T> elem : to_merge) {
+		this->push_back(elem);
+	}
+}
+
+/*template<typename T>
+void List<T>::delete_element(iterator pos) {
+	list_element<T>* el = &(*pos);
+	bool fst = false;
+	bool lst = false;
+	if (el->prev != NULL) {
+		fst = true;
+	}
+	if (el->next != NULL) {
+		lst = true;
+	}
+
+}
+
+template<typename T>
+void List<T>::erase(iterator start, iterator finish) {
+	++finish;
+	for (iterator it = start; it != finish; ++it) {
+		list_element<T>* el = &(*it);
+
+	}
+}*/

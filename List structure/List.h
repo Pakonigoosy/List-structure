@@ -36,6 +36,8 @@ public:
 	//void copy(iterator fst, iterator lst, std::ostream_iterator<T> action);
 	void unique();
 	void merge(List<T> to_merge);
+	void erase(iterator start, iterator finish);
+	iterator erase(iterator pos);
 
 	iterator begin();
 	iterator end();
@@ -47,6 +49,7 @@ public:
 private:
 	list_element<T>* first;
 	list_element<T>* last;
+	void delete_element(iterator pos);
 
 };
 
