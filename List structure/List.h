@@ -25,6 +25,7 @@ public:
 	
 	List();
 	List(std::initializer_list<T> init);
+	~List();
 
 
 	void pop_front();
@@ -34,7 +35,6 @@ public:
 	T front();
 	T back();
 	iterator insert(List<T>::iterator, T value);
-	//void copy(iterator fst, iterator lst, std::ostream_iterator<T> action);
 	void unique();
 	void merge(List<T> to_merge);
 	void erase(iterator start, iterator finish);
@@ -133,6 +133,15 @@ List<T>::List(std::initializer_list<T> init) {
 	}
 }
 
+template<typename T>
+List<T>::~List() {
+	for (iterator it = iterator(last->prev); it != iterator(first); ) {
+		delete_element(it);
+	}
+	delete first;
+	delete last;
+}
+
 template <typename T>
 void List<T>::pop_front() {
 	if (size > 0) {
@@ -213,7 +222,7 @@ ListIterator<T>::ListIterator(T* p) : p(p) {
 }
 
 template<typename T>
-ListIterator<T>::ListIterator(const ListIterator& it) : p(it.p) {
+ListIterator<T>::ListIterator(const ListIterator& it) : p(&(*it)) {
 
 }
 
@@ -234,15 +243,17 @@ T& ListIterator<T>::operator*() const {
 
 template<typename T>
 ListIterator<T>& ListIterator<T>::operator++() {
-	p = p->next;
-
+	if (p->next != NULL) {
+		p = p->next;
+	}
 	return *this;
 }
 
 template<typename T>
 ListIterator<T>& ListIterator<T>::operator--() {
-	p = p->prev;
-
+	if (p->prev != NULL) {
+		p = p->prev;
+	}
 	return *this;
 }
 
