@@ -1,13 +1,14 @@
 #include <iostream>
-#include "List.cpp"
+#include "List.h"
 using namespace std;
 int main() {
-	List<int> listok = { 1, 2, 3, 4, 5, 1, 2, 3, 4, 5 };
-	List<int> to_merge = { 7, 8, 9 };
+	/*List<int> listok = List<int>();
+	listok.pop_back();*/
+	List<int> listok = {1, 2, 3, 4, 5, 1, 2, 3, 4, 5};
 	copy(listok.begin(), listok.end(), ostream_iterator<list_element<int>>(cout, " "));
 	cout << endl;
-	listok.unique();
-	listok.merge(to_merge);
+	listok.pop_back();
+	listok.pop_front();
 	copy(listok.begin(), listok.end(), ostream_iterator<list_element<int>>(cout, " "));
 	
 }
