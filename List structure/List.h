@@ -39,6 +39,11 @@ public:
 	void merge(List<T> to_merge);
 	void erase(iterator start, iterator finish);
 	iterator erase(iterator pos);
+	void remove(T x);
+	void remove_if(bool (*function)(T));
+
+
+
 	size_t get_size() { return size; };
 
 	iterator begin();
@@ -330,16 +335,54 @@ void List<T>::delete_element(iterator& pos) {
 		first->next = last;
 		last->prev = first;
 	}
-	--pos;
+	if (fst) {
+		++pos;
+	}
+	else {
+		--pos;
+	}
 	delete el;
+
+	
 	size -= 1;
 }
 
-/*template<typename T>
+template<typename T>
 void List<T>::erase(iterator start, iterator finish) {
 	++finish;
 	for (iterator it = start; it != finish; ++it) {
-		list_element<T>* el = &(*it);
+		delete_element(it);
 
 	}
-}*/
+}
+
+template<typename T>
+ListIterator<list_element<T>> List<T>::erase(iterator pos) {
+	delete_element(pos);
+	++pos;
+	return pos;
+}
+
+template<typename T>
+void List<T>::remove(T x) {
+	
+	for (iterator it = begin(); it!=last; ++it)
+	{
+
+		if ((*it).value == x) {
+			delete_element(it);
+		}
+	}
+}
+
+template<typename T>
+void List<T>::remove_if(bool (*function)(T )) {
+
+	for (iterator it = begin(); it != last; ++it)
+	{
+		
+		if (function((*it).value)) {
+			delete_element(it);
+		}
+	}
+}
